@@ -23,8 +23,8 @@ app.use('/uploads', express.static('uploads'));
 
 // Définition des routes
 app.use('/xassida_app/users', utilisateurRoutes);
-app.use('/xassida_app/xassidas', xassidaRoutes);
-app.use('/xassida_app/admins', adminRoutes);
+app.use('/xassida_app/users', xassidaRoutes);
+app.use('/xassida_app/users', adminRoutes);
 
 // Synchronisation de la base et lancement du serveur
 (async () => {
