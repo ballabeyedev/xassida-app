@@ -354,36 +354,48 @@ exports.lireXassida = async (req, res) => {
 exports.ouvrirXassidaPDF = async (req, res) => {
   try {
     const { xassidaId } = req.params;
+    console.log('🔹 ID Xassida demandé:', xassidaId);
 
-    // Récupérer la Xassida
     const xassida = await Xassida.findByPk(xassidaId);
     if (!xassida) {
+      console.warn('⚠️ Xassida introuvable pour l’ID:', xassidaId);
       return res.status(404).json({ message: "Xassida introuvable" });
     }
 
-    // Vérifier que le fichier PDF existe
-    const filePath = path.join(__dirname, '..', xassida.pdfUrl);
-    if (!fs.existsSync(filePath)) {
+    // Correction du chemin
+    const filePath = path.join(process.cwd(), xassida.pdfUrl);
+    console.log('📂 Chemin calculé pour le PDF:', filePath);
+
+    const fileExists = fs.existsSync(filePath);
+    console.log('✅ Le fichier existe-t-il ?', fileExists);
+
+    if (!fileExists) {
+      console.error('❌ Fichier PDF introuvable sur le serveur:', filePath);
       return res.status(404).json({ message: "Fichier PDF introuvable sur le serveur" });
     }
 
-    // Définir les bons en-têtes HTTP pour afficher dans le navigateur
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader(
       'Content-Disposition',
       `inline; filename="${path.basename(filePath)}"`
     );
 
-    // Stream du fichier PDF directement au client
     const fileStream = fs.createReadStream(filePath);
+    fileStream.on('error', (streamErr) => {
+      console.error('❌ Erreur lors du streaming du PDF:', streamErr);
+      res.status(500).json({ message: "Erreur serveur lors du streaming du PDF", erreur: streamErr.message });
+    });
+
+    console.log('🚀 Envoi du PDF en streaming...');
     fileStream.pipe(res);
 
   } catch (err) {
-    console.error('Erreur ouverture Xassida PDF:', err);
+    console.error('❌ Erreur ouverture Xassida PDF:', err);
     return res.status(500).json({
       message: "Erreur serveur lors de l’ouverture du PDF",
       erreur: err.message
     });
   }
 };
+
 
