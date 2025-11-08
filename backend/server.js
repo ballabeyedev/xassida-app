@@ -3,6 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const sequelize = require('./config/db');
 dotenv.config();
+const path = require('path');
+
 
 // Routes
 const utilisateurRoutes = require('./routes/utilisateurRoutes');
@@ -17,7 +19,6 @@ const Favori = require('./models/Favori');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));
 
 // Définition des routes
 app.use('/xassida_app/users', utilisateurRoutes);
