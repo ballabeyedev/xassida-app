@@ -24,6 +24,8 @@ app.use('/xassida_app/users', utilisateurRoutes);
 app.use('/xassida_app/users', xassidaRoutes);
 app.use('/xassida_app/users', adminRoutes);
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Synchronisation de la base et lancement du serveur
 (async () => {
   try {
