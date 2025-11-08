@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const uploadPdf = require('../middlewares/uploadPdf');
+const { ajoutXassida } = require('../controllers/xassidaController');
 
-// Exemple route
-router.get('/', (req, res) => {
-  res.send('Test route');
-});
+// Route pour ajouter un Xassida
+router.post('/admin/ajouter-xassida', uploadPdf.single('pdf'), ajoutXassida);
 
-module.exports = router; // ← Important !
+module.exports = router;
