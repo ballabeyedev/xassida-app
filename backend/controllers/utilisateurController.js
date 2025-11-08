@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
 
-const { User: Utilisateur, Xassida, Favori, Categorie } = require('../models');
+const { User: Utilisateur, Xassida, Favori } = require('../models');
 const { Op } = require('sequelize');
 const SECRET_KEY = process.env.JWT_SECRET;
 

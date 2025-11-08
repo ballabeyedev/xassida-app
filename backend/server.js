@@ -12,8 +12,6 @@ const adminRoutes = require('./routes/adminRoutes');
 // Modèles
 const User = require('./models/User');
 const Xassida = require('./models/Xassida');
-const Categorie = require('./models/Categorie');
-const XassidaCategorie = require('./models/XassidaCategorie');
 const Favori = require('./models/Favori');
 
 const app = express();
