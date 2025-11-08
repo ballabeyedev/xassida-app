@@ -13,5 +13,7 @@ router.get('/xassidas/liste_Xassida_Favorie', auth, utilisateurController.listeX
 router.get('/xassidas/telecharger/:xassidaId', auth, utilisateurController.telechargerXassida);
 router.post('/xassidas/mettre_favorie_xassida/:xassidaId', auth, utilisateurController.ajouterFavori);
 router.post('/xassidas/supprimer_favorie_xassida/:xassidaId', auth, utilisateurController.ajouterFavori);
+router.get('/xassidas/ouvrir/:xassidaId', auth, utilisateurController.ouvrirXassidaPDF);
+
 
 module.exports = router;

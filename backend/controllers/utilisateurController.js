@@ -349,3 +349,41 @@ exports.lireXassida = async (req, res) => {
     return res.status(500).json({ message: "Erreur serveur", erreur: err.message });
   }
 };
+
+// -------------------- OUVRIR XASSIDA PDF --------------------
+exports.ouvrirXassidaPDF = async (req, res) => {
+  try {
+    const { xassidaId } = req.params;
+
+    // Récupérer la Xassida
+    const xassida = await Xassida.findByPk(xassidaId);
+    if (!xassida) {
+      return res.status(404).json({ message: "Xassida introuvable" });
+    }
+
+    // Vérifier que le fichier PDF existe
+    const filePath = path.join(__dirname, '..', xassida.pdfUrl);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "Fichier PDF introuvable sur le serveur" });
+    }
+
+    // Définir les bons en-têtes HTTP pour afficher dans le navigateur
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `inline; filename="${path.basename(filePath)}"`
+    );
+
+    // Stream du fichier PDF directement au client
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.pipe(res);
+
+  } catch (err) {
+    console.error('Erreur ouverture Xassida PDF:', err);
+    return res.status(500).json({
+      message: "Erreur serveur lors de l’ouverture du PDF",
+      erreur: err.message
+    });
+  }
+};
+
