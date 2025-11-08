@@ -19,14 +19,7 @@ const Xassida = sequelize.define('Xassida', {
     type: DataTypes.DATEONLY,
     defaultValue: DataTypes.NOW,
   },
-  audioUrl: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  videoUrl: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+  
   pdfUrl: {
     type: DataTypes.STRING,
     allowNull: false
