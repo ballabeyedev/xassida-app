@@ -1,10 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path'); // <-- Ici, avant toute utilisation
 const sequelize = require('./config/db');
 dotenv.config();
-const path = require('path');
-
 
 // Routes
 const utilisateurRoutes = require('./routes/utilisateurRoutes');
@@ -20,12 +19,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serveur fichiers statiques
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Définition des routes
 app.use('/xassida_app/users', utilisateurRoutes);
 app.use('/xassida_app/users', xassidaRoutes);
 app.use('/xassida_app/users', adminRoutes);
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Synchronisation de la base et lancement du serveur
 (async () => {
