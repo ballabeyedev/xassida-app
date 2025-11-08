@@ -357,37 +357,23 @@ exports.ouvrirXassidaPDF = async (req, res) => {
     console.log('🔹 ID Xassida demandé:', xassidaId);
 
     const xassida = await Xassida.findByPk(xassidaId);
+    console.log('📦 Xassida récupérée:', xassida ? xassida.titre : null);
+
     if (!xassida) {
-      console.warn('⚠️ Xassida introuvable pour l’ID:', xassidaId);
+      console.warn('❌ Xassida introuvable pour l’ID:', xassidaId);
       return res.status(404).json({ message: "Xassida introuvable" });
     }
 
-    // Correction du chemin
-    const filePath = path.join(process.cwd(), xassida.pdfUrl);
-    console.log('📂 Chemin calculé pour le PDF:', filePath);
-
-    const fileExists = fs.existsSync(filePath);
-    console.log('✅ Le fichier existe-t-il ?', fileExists);
-
-    if (!fileExists) {
-      console.error('❌ Fichier PDF introuvable sur le serveur:', filePath);
-      return res.status(404).json({ message: "Fichier PDF introuvable sur le serveur" });
+    if (!xassida.pdfUrl) {
+      console.warn('❌ PDF non défini pour l’ID:', xassidaId);
+      return res.status(404).json({ message: "PDF non défini" });
     }
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader(
-      'Content-Disposition',
-      `inline; filename="${path.basename(filePath)}"`
-    );
+    // Construire l’URL publique
+    const publicUrl = `${req.protocol}://${req.get('host')}${xassida.pdfUrl}`;
+    console.log('🌐 URL publique construite:', publicUrl);
 
-    const fileStream = fs.createReadStream(filePath);
-    fileStream.on('error', (streamErr) => {
-      console.error('❌ Erreur lors du streaming du PDF:', streamErr);
-      res.status(500).json({ message: "Erreur serveur lors du streaming du PDF", erreur: streamErr.message });
-    });
-
-    console.log('🚀 Envoi du PDF en streaming...');
-    fileStream.pipe(res);
+    return res.status(200).json({ url: publicUrl });
 
   } catch (err) {
     console.error('❌ Erreur ouverture Xassida PDF:', err);
@@ -397,5 +383,7 @@ exports.ouvrirXassidaPDF = async (req, res) => {
     });
   }
 };
+
+
 
 
